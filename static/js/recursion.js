@@ -29,7 +29,6 @@ var domain_gen_pre = function(pattern){
 			var match = pattern.substring(pre_bracket_index).match(reg);
 			if(match){
 				var sub_pattern = match[1];
-				console.info(sub_pattern)
 				var sub_cur = sub_pattern.charAt(0);
 				if(sub_cur === 'w'){
 					maybe_list.push(multi_arr(letters.split(''), sub_pattern.length));

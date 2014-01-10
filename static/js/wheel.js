@@ -36,12 +36,17 @@ var Wheel = function(options){
 			self.step(); 
 		}, delay || 1000);
 	};
+
+	this.stop = function(){
+		clearInterval(this.timer);
+	}
 };
 
 var WheelContainer = {
 	wheels: [],
 
 	init: function(maybe_list){
+		this.wheels = [];
 		for (var i = 0; i < maybe_list.length; i++) {
 			var w = new Wheel({
 				elements: maybe_list[i],
@@ -65,5 +70,9 @@ var WheelContainer = {
 
 	go: function(){
 		this.wheels[0].run(100);
+	},
+
+	stop: function(){
+		this.wheels[0].stop();
 	}
 };

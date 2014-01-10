@@ -10,6 +10,15 @@
 			text-align: center;
 			padding: 30px 0px;
 		}
+		.header{
+			margin-top: 30px;
+		}
+		.header .form-control, .btn, input, .checkbox{
+			display: inline-block;
+		}
+		.checkbox+.checkbox{
+			margin-top: 10px;
+		}
 		#domain_input{
 			width: 400px;
 		}
@@ -17,7 +26,7 @@
 </head>
 
 <body>
-	<div class="container">
+	<div class="container header">
 
 		<!-- 
 		<div class="options">
@@ -30,14 +39,58 @@
 			<label for="digital"><input type="checkbox">数字</label>
 			<label for="letter">字母</label>
 		</div> -->
-		<form class="form-inline">
-		  <div class="form-group">
+		  <div>
 		    <input type="text" class="form-control" id="domain_input">
+		    <button id="check" class="btn btn-primary">开始查询</button>
 		  </div>
-		  <button id="check" class="btn btn-primary">GO !</button>
-		</form>
+		  <div>
+		    <label for="com" class="checkbox">
+		    	<input id="com" type="checkbox" value="com">com
+		    </label>
+		    <label for="cn" class="checkbox">
+		    	<input id="cn" type="checkbox" value="cn">cn
+		    </label>
+		    <label for="org" class="checkbox">
+		    	<input id="org" type="checkbox" value="org">org
+		    </label>
+		    <label for="net" class="checkbox">
+		    	<input id="net" type="checkbox" value="net">net
+		    </label>
+		  </div>
+		  	
+	</div>
 
-		<div class="result-container"></div>
+	<div class="container">
+		<div class="row">
+		  <div class="col-md-3">
+		  	<div class="panel panel-success com">
+		  		<div class="panel-heading">.com</div>
+		  		<div class="list-group">
+				</div>
+		  	</div>
+		  </div>
+		  <div class="col-md-3">
+		  	<div class="panel panel-success cn">
+		  		<div class="panel-heading">.cn</div>
+		  		<div class="list-group">
+				</div>
+		  	</div>
+		  </div>
+		  <div class="col-md-3">
+		  	<div class="panel panel-success net">
+		  		<div class="panel-heading">.net</div>
+		  		<div class="list-group">
+				</div>
+		  	</div>
+		  </div>
+		  <div class="col-md-3">
+		  	<div class="panel panel-success org">
+		  		<div class="panel-heading">.org</div>
+		  		<div class="list-group">
+				</div>
+		  	</div>
+		  </div>
+		</div>
 	</div>
 
 <script src="static/js/jquery-1.10.1.min.js" type="text/javascript"></script>
@@ -47,35 +100,54 @@
 <script>
 
 $(function(){
+	var check_url = 'http://pandavip.www.net.cn/check/check_ac1.cgi',
+		domain_types = ['.com', '.net', '.cn', '.org'];
+
 	var check_domain = function (domain) {
-		var check_url = 'http://pandavip.www.net.cn/check/check_ac1.cgi'
-		$.get(check_url, {domain: domain}, function(res){
-			var res_arr = res.split('|'),
-				type = res_arr[0],
-				domain = res_arr[1],
-				status = res_arr[2],
-				info = res_arr[3];
-			$('.result-container').append($('<div/>').html(domain + ' : '+status+' : ' + info));
-		}, 'jsonp');
+
+		$.ajax({
+		  	url: check_url,
+		   	dataType: 'jsonp',
+		   	data: {domain: domain},
+		   	success: function(data, textStatus, jqXHR){
+				var res_arr = data.split('|'),
+					type = res_arr[0],
+					domain = res_arr[1],
+					status = res_arr[2],
+					info = res_arr[3];
+				// if(status == '210'){
+					var item = $('<a/>').addClass('list-group-item')
+										.attr('data-domain', domain)
+										.text(domain + ':' + status + ':' + info);
+					$('.panel.'+ type +' .list-group').prepend(item);	
+				// }
+			},
+			error: function (XMLHttpRequest, textStatus) {
+				console.info('error: ' + textStatus)
+			    var item = $('<a/>').addClass('list-group-item text-error')
+										.attr('data-domain', domain)
+										.text(domain + ':' + textStatus);
+				$('.panel.'+ type +' .list-group').prepend(item);	
+			}
+		});
 	};
 
-	$('#check').click(function(e){
-		e.preventDefault();
-		var pattern = $('#domain_input').val();
-		var maybe_list = domain_gen_pre(pattern);
-		var domain_types = ['.com', '.net', '.cn', '.org'];
-		WheelContainer.init(maybe_list);
-		console.info(WheelContainer.wheels)
-		WheelContainer.wheels[0].on_step=function () {
-			console.info(WheelContainer.value());
-			// for (var i = 0; i < domain_types.length; i++) {
-			// 	// check_domain(WheelContainer.value() + domain_types[i]);
-			// 	console.info(WheelContainer.value());
-			// 	// $('.result-container').append($('<div/>').html(WheelContainer.value() + domain_types[i]));
-			// };
+	$('#check').click(
+		function(e){
+			e.preventDefault();
+			$(this).text('停止查询');
+			var pattern = $('#domain_input').val(),
+				maybe_list = domain_gen_pre(pattern);
+
+			WheelContainer.init(maybe_list);
+			WheelContainer.wheels[0].on_step=function () {
+				for (var i = 0; i < domain_types.length; i++) {
+					check_domain(WheelContainer.value() + domain_types[i]);
+				};
+			};
+			WheelContainer.go();
 		}
-		WheelContainer.go();
-	});
+	);
 
 
 });
