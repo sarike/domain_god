@@ -1,28 +1,31 @@
 var Wheel = function(options){
 	this.elements = options.elements || [];
 	this.on_step = options.on_step || function(){};
+	this.on_stop = options.on_stop || function(){};
+	this.on_all_finish = options.on_all_finish || function(){};
 	this.name = options.name;
 
 	this.size = this.elements.length;
 	this.position = 0;
-	this.over = false;
 
 	this.step = function(){
 		this.on_step();
 
-		this.position = (this.position + 1) % this.size;
-
+		// 判断当前轮子是否完成
 		if(this.position == this.size - 1 && !this.next){
+			// 判断是否所有轮子完成
 			if(!this.pre){
 				clearInterval(this.timer);
-				this.on_step();
+				this.on_all_finish();
 				return;
 			}
+			//如果当前轮子完成，从链表中移除
 			this.pre.next = null;
-		}
-		
-		if(this.position === this.size - 1 && this.next){
-			this.next.step();	
+		}else{
+			this.position = (this.position + 1) % this.size;
+			if(this.position === this.size - 1 && this.next){
+				this.next.step();	
+			}
 		}
 	};
 
@@ -37,7 +40,7 @@ var Wheel = function(options){
 		}, delay || 1000);
 	};
 
-	this.stop = function(){
+	this.pause = function(){
 		clearInterval(this.timer);
 	}
 };
@@ -45,6 +48,9 @@ var Wheel = function(options){
 var WheelContainer = {
 	wheels: [],
 
+	/**
+	*	 w[0] --next-->  w[1] --next-->  w[2] --next-->  w[3] --next-->  w[4]
+	**/
 	init: function(maybe_list){
 		this.wheels = [];
 		for (var i = 0; i < maybe_list.length; i++) {
@@ -60,6 +66,8 @@ var WheelContainer = {
 		}
 	},
 
+	on_all_finish: function(){},
+
 	value: function () {
 		var result = "";
 		for (var i = 0; i < this.wheels.length; i++) {
@@ -69,10 +77,17 @@ var WheelContainer = {
 	},
 
 	go: function(){
+		self = this;
 		this.wheels[0].run(100);
+		this.wheels[0].on_all_finish = function(){
+			self.on_all_finish();
+			for (var i = 0; i < self.wheels.length; i++) {
+				self.wheels[i].position = 0;
+			};
+		};
 	},
 
-	stop: function(){
-		this.wheels[0].stop();
+	pause: function(){
+		this.wheels[0].pause();
 	}
 };

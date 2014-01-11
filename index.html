@@ -7,8 +7,7 @@
 
 	<style>
 		.container{
-			text-align: center;
-			padding: 30px 0px;
+			padding: 30px 0px 0px;
 		}
 		.header{
 			margin-top: 30px;
@@ -16,48 +15,82 @@
 		.header .form-control, .btn, input, .checkbox{
 			display: inline-block;
 		}
+		.checkbox{
+			margin: 3px;
+		}
 		.checkbox+.checkbox{
-			margin-top: 10px;
+			margin-top: 3px;
 		}
 		#domain_input{
 			width: 400px;
+		}
+		.help-info{
+			line-height: 25px;
+		}
+		.search-content{
+			width: 600px;
+			margin: 0 auto;
+		}
+		.glyphicon-remove-circle{
+			color: red;
+		}
+		.glyphicon-ok-circle{
+			color: green;
 		}
 	</style>
 </head>
 
 <body>
 	<div class="container header">
-
-		<!-- 
-		<div class="options">
-			<label for="com"><input id="com" type="checkbox" value="com" name="type">com</label>
-			<label for="cn"><input id="cn" type="checkbox" value="cn" name="type">cn</label>
-			<label for="net"><input id="net" type="checkbox" value="net" name="type">net</label>
-			<label for="org"><input id="org" type="checkbox" value="org" name="type">org</label>
-		</div>
-		<div class="options">
-			<label for="digital"><input type="checkbox">数字</label>
-			<label for="letter">字母</label>
-		</div> -->
-		  <div>
+		<div class="search-content">
+			<div>
 		    <input type="text" class="form-control" id="domain_input">
 		    <button id="check" class="btn btn-primary">开始查询</button>
+		    <button id="clear" class="btn btn-primary">清除结果</button>
+		  </div>
+		  <div>
+		    <label>
+		    	<input type="radio" checked name="show_all" class="show_all ok">
+		    	显示全部域名
+		    </label>
+		    <label>
+		    	<input type="radio"  name="show_all" class="show_all">
+		    	只显示未注册域名
+		    </label>
+		    <label for="exact" class="checkbox">
+		    	<input id="exact" type="checkbox" class="exact">
+		    	精确查询
+		    </label>
 		  </div>
 		  <div>
 		    <label for="com" class="checkbox">
-		    	<input id="com" type="checkbox" value="com">com
+		    	<input id="com" type="checkbox" checked value="com" class="domain_type">com
 		    </label>
 		    <label for="cn" class="checkbox">
-		    	<input id="cn" type="checkbox" value="cn">cn
+		    	<input id="cn" type="checkbox" checked value="cn" class="domain_type">cn
 		    </label>
 		    <label for="org" class="checkbox">
-		    	<input id="org" type="checkbox" value="org">org
+		    	<input id="org" type="checkbox" checked value="org" class="domain_type">org
 		    </label>
 		    <label for="net" class="checkbox">
-		    	<input id="net" type="checkbox" value="net">net
+		    	<input id="net" type="checkbox" checked value="net" class="domain_type">net
 		    </label>
 		  </div>
-		  	
+		</div>
+	</div>
+
+	<div class="container help-info">
+
+		<div class="alert alert-info">
+			<span class="label label-success">查询规则：</span><br>
+			w 表示字母，d表示数字，圆括号包含的位表示一致输出。<br>
+			<span class="label label-success">用法举例：</span><br>
+			wwww 表示由四个字母组成的所有域名；
+			dddd 表示由四个数字组成的所有域名；
+			dd(www) 表示由两个数字和三个相同的字母组成的所有域名，例如：23aaa.com <br>
+			<span class="label label-success">使用须知：</span><br>
+			“停止查询”只会停止继续发送网络请求，而不会放弃之前已发出的请求；“清除结果”会重新计数；
+		</div>
 	</div>
 
 	<div class="container">
@@ -65,6 +98,14 @@
 		  <div class="col-md-3">
 		  	<div class="panel panel-success com">
 		  		<div class="panel-heading">.com</div>
+		  		<div class="panel-body">
+		  			<div>
+		  				成功查询 <strong class="total-count">0</strong> 个域名
+		  			</div>
+		  			<div>
+		  				其中未注册域名 <strong class="available-count">0</strong> 个
+		  			</div>
+		  		</div>
 		  		<div class="list-group">
 				</div>
 		  	</div>
@@ -72,6 +113,14 @@
 		  <div class="col-md-3">
 		  	<div class="panel panel-success cn">
 		  		<div class="panel-heading">.cn</div>
+		  		<div class="panel-body">
+		  			<div>
+		  				成功查询 <strong class="total-count">0</strong> 个域名
+		  			</div>
+		  			<div>
+		  				其中未注册域名 <strong class="available-count">0</strong> 个
+		  			</div>
+		  		</div>
 		  		<div class="list-group">
 				</div>
 		  	</div>
@@ -79,6 +128,14 @@
 		  <div class="col-md-3">
 		  	<div class="panel panel-success net">
 		  		<div class="panel-heading">.net</div>
+		  		<div class="panel-body">
+		  			<div>
+		  				成功查询 <strong class="total-count">0</strong> 个域名
+		  			</div>
+		  			<div>
+		  				其中未注册域名 <strong class="available-count">0</strong> 个
+		  			</div>
+		  		</div>
 		  		<div class="list-group">
 				</div>
 		  	</div>
@@ -86,6 +143,14 @@
 		  <div class="col-md-3">
 		  	<div class="panel panel-success org">
 		  		<div class="panel-heading">.org</div>
+		  		<div class="panel-body">
+		  			<div>
+		  				成功查询 <strong class="total-count">0</strong> 个域名
+		  			</div>
+		  			<div>
+		  				其中未注册域名 <strong class="available-count">0</strong> 个
+		  			</div>
+		  		</div>
 		  		<div class="list-group">
 				</div>
 		  	</div>
@@ -101,55 +166,154 @@
 
 $(function(){
 	var check_url = 'http://pandavip.www.net.cn/check/check_ac1.cgi',
-		domain_types = ['.com', '.net', '.cn', '.org'];
+		domain_types = ['com', 'net', 'cn', 'org'],
+		show_all = true,
+		exact = false,
+		pattern = '',
+		statistic = {};
+
+	var request_list = [];
+
+	var init_statistic = function(){
+		for (var i = 0; i < domain_types.length; i++) {
+			statistic[domain_types[i]] = {
+				total: 0,
+				available: 0
+			}
+		};
+	};
+
+	init_statistic();
+
+	var show_domain = function(type, domain, status, info){
+			var item = $('<a/>').addClass('list-group-item')
+								.attr('data-domain', domain)
+								.text(domain);
+			var remove_icon = $('<span/>').addClass("pull-right glyphicon glyphicon-remove-circle"),
+				ok_icon = $('<span/>').addClass("pull-right glyphicon glyphicon-ok-circle");
+
+			if(status === '210'){
+				item.append(ok_icon);
+			}else{
+				item.append(remove_icon);
+			}
+			$('.panel.'+ type +' .list-group').prepend(item);	
+	};
+
+	var show_available_domain = function(type, domain, status, info){
+		if(status == '210'){
+			show_domain(type, domain, status, info);
+		}
+	};
+		
 
 	var check_domain = function (domain) {
-
 		$.ajax({
 		  	url: check_url,
 		   	dataType: 'jsonp',
 		   	data: {domain: domain},
-		   	success: function(data, textStatus, jqXHR){
-				var res_arr = data.split('|'),
+		   	success: function(data){
+		   		var res_arr = data.split('|'),
 					type = res_arr[0],
 					domain = res_arr[1],
 					status = res_arr[2],
 					info = res_arr[3];
-				// if(status == '210'){
-					var item = $('<a/>').addClass('list-group-item')
-										.attr('data-domain', domain)
-										.text(domain + ':' + status + ':' + info);
-					$('.panel.'+ type +' .list-group').prepend(item);	
-				// }
-			},
-			error: function (XMLHttpRequest, textStatus) {
-				console.info('error: ' + textStatus)
-			    var item = $('<a/>').addClass('list-group-item text-error')
-										.attr('data-domain', domain)
-										.text(domain + ':' + textStatus);
-				$('.panel.'+ type +' .list-group').prepend(item);	
+
+				statistic[type].total += 1;
+				if(status === '210'){
+					statistic[type].available += 1;
+				}
+
+				$('.panel.' + type).find('.total-count').text(statistic[type].total);
+				$('.panel.' + type).find('.available-count').text(statistic[type].available);
+
+				if(show_all){
+					show_domain(type, domain, status, info);
+				}else{
+					show_available_domain(type, domain, status, info);
+				}
 			}
 		});
 	};
 
-	$('#check').click(
-		function(e){
-			e.preventDefault();
-			$(this).text('停止查询');
-			var pattern = $('#domain_input').val(),
-				maybe_list = domain_gen_pre(pattern);
+	$('.show_all').click(function(e){
+		show_all = $(e.currentTarget).hasClass('ok');
+	});
 
-			WheelContainer.init(maybe_list);
-			WheelContainer.wheels[0].on_step=function () {
+	$('.exact').change(function(e){
+		exact = e.currentTarget.checked;
+	});
+
+	$('.domain_type').change(function(e){
+		var type = $(e.currentTarget).val();
+		if(e.currentTarget.checked){
+			if(domain_types.indexOf(type) < 0){
+				domain_types.push(type)
+			}
+		}else{
+			var index = domain_types.indexOf(type);
+			console.info(index);
+			if(index >= 0){
+				domain_types.splice(index, 1);
+			}
+		}
+	});
+
+	$('#check').click(function(e){
+			e.preventDefault();
+			var target = $(e.currentTarget),
+				new_pattern = $('#domain_input').val();
+
+			if(!new_pattern){
+				return;
+			}
+
+			if(exact){
 				for (var i = 0; i < domain_types.length; i++) {
-					check_domain(WheelContainer.value() + domain_types[i]);
+					check_domain(new_pattern + '.' + domain_types[i]);
 				};
-			};
-			WheelContainer.go();
+				return;
+			}
+
+			target.toggleClass('started');
+
+			if(pattern !== new_pattern){
+				$('.panel .list-group').empty();
+				target.removeClass('inited');
+			}
+
+			if(!target.hasClass('inited')){
+				pattern = new_pattern,
+				maybe_list = domain_gen_pre(pattern);
+				WheelContainer.init(maybe_list);
+				target.addClass('inited');
+			}
+
+			if(target.hasClass('started')){
+				$(this).text('停止查询');
+
+				WheelContainer.wheels[0].on_step=function () {
+					console.info(WheelContainer.value())
+					for (var i = 0; i < domain_types.length; i++) {
+						check_domain(WheelContainer.value() + '.' + domain_types[i]);
+					};
+				};
+				WheelContainer.on_all_finish=function () {
+					target.removeClass('inited started');
+					target.text('开始查询');
+				};
+				WheelContainer.go();
+			}else{
+				$(this).text('开始查询');
+				WheelContainer.pause();
+			}
 		}
 	);
 
-
+	$("#clear").click(function(){
+		$('.panel .list-group').empty();
+		init_statistic();	
+	});
 });
 	
 </script>
