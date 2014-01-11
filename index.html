@@ -291,8 +291,13 @@ $(function(){
 			if(!target.hasClass('inited')){
 				pattern = new_pattern,
 				maybe_list = domain_gen_pre(pattern);
-				WheelContainer.init(maybe_list);
-				target.addClass('inited');
+				if(maybe_list &&　maybe_list.length > 0){
+					WheelContainer.init(maybe_list);
+					target.addClass('inited');
+				}else{
+					alert('请输入正确的域名规则')
+					return;
+				}
 			}
 
 			if(target.hasClass('started')){
