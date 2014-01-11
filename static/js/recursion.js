@@ -13,10 +13,25 @@ var multi_arr = function(origin_arr, multiple){
 	return result;
 };
 
+var get_seq = function(char){
+	if(cur === '*' ){
+		maybe_list.push((letters + digitals).split(''))
+	}
+	if(cur === 'w'){
+		maybe_list.push(letters.split(''));
+	}
+	if(cur === 'd'){
+		maybe_list.push(digitals.split(''));	
+	}
+};
+
 var domain_gen_pre = function(pattern){
 	var maybe_list = []
 	for (var i = 0; i < pattern.length; i++) {
 		var cur = pattern.charAt(i);
+		if(cur === '*' ){
+			maybe_list.push((letters + digitals).split(''))
+		}
 		if(cur === 'w'){
 			maybe_list.push(letters.split(''));
 		}
@@ -30,6 +45,9 @@ var domain_gen_pre = function(pattern){
 			if(match){
 				var sub_pattern = match[1];
 				var sub_cur = sub_pattern.charAt(0);
+				if(cur === '*' ){
+					maybe_list.push((letters + digitals).split(''))
+				}
 				if(sub_cur === 'w'){
 					maybe_list.push(multi_arr(letters.split(''), sub_pattern.length));
 				}
@@ -37,7 +55,6 @@ var domain_gen_pre = function(pattern){
 					maybe_list.push(multi_arr(digitals.split(''), sub_pattern.length));	
 				}
 			}
-			
 			i += pattern.substring(pre_bracket_index).indexOf(')');
 		}
 	};
